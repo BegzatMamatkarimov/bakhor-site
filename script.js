@@ -29,6 +29,9 @@ function translatePage() {
   document.querySelectorAll("[data-lang]").forEach((btn) => {
     btn.classList.toggle("active", btn.dataset.lang === lang);
   });
+  // Готовое сообщение для WhatsApp на выбранном языке
+  document.getElementById("whatsapp").href =
+    "https://wa.me/77476819247?text=" + encodeURIComponent(t("whatsapp.text"));
 }
 
 function setLang(newLang) {

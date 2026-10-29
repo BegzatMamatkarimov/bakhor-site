@@ -37,6 +37,8 @@ const TEXTS = {
     "tips.rulesText": "<li>Пейте только бутилированную воду и берегитесь солнца.</li><li>В мечети — закрытые плечи и колени.</li><li>Нельзя трогать кораллы и вывозить древности.</li>",
 
     "contacts.title": "Контакты", "contacts.phone": "Наш телефон",
+    "contacts.whatsapp": "Нажмите на номер, чтобы написать нам в WhatsApp.",
+    "whatsapp.text": "Здравствуйте! Я с сайта EgyptWay. Хочу узнать подробнее о туре в Египет.",
     "contacts.emergency": "Экстренные номера в Египте",
     "contacts.tourist": "Туристическая полиция", "contacts.police": "Полиция",
     "contacts.ambulance": "Скорая помощь", "contacts.fire": "Пожарная служба",
@@ -83,6 +85,8 @@ const TEXTS = {
     "tips.rulesText": "<li>Тек бөтелкедегі су ішіңіз және күннен сақтаныңыз.</li><li>Мешітте иық пен тізе жабық болуы керек.</li><li>Маржандарды ұстауға және көне жәдігерлерді шығаруға болмайды.</li>",
 
     "contacts.title": "Байланыс", "contacts.phone": "Біздің телефон",
+    "contacts.whatsapp": "WhatsApp-қа жазу үшін нөмірді басыңыз.",
+    "whatsapp.text": "Сәлеметсіз бе! Мен EgyptWay сайтынанмын. Египетке тур туралы толығырақ білгім келеді.",
     "contacts.emergency": "Египеттегі шұғыл нөмірлер",
     "contacts.tourist": "Туристік полиция", "contacts.police": "Полиция",
     "contacts.ambulance": "Жедел жәрдем", "contacts.fire": "Өрт сөндіру қызметі",
@@ -129,6 +133,8 @@ const TEXTS = {
     "tips.rulesText": "<li>Drink only bottled water and protect yourself from the sun.</li><li>In mosques, cover your shoulders and knees.</li><li>Don't touch corals or take antiquities out of the country.</li>",
 
     "contacts.title": "Contacts", "contacts.phone": "Our phone",
+    "contacts.whatsapp": "Tap the number to message us on WhatsApp.",
+    "whatsapp.text": "Hello! I found you on EgyptWay. I would like to know more about a tour to Egypt.",
     "contacts.emergency": "Emergency numbers in Egypt",
     "contacts.tourist": "Tourist police", "contacts.police": "Police",
     "contacts.ambulance": "Ambulance", "contacts.fire": "Fire service",
