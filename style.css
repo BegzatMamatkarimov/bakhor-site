@@ -161,6 +161,7 @@ body.dark .sand { fill: #5a4030; }
 .card h3 { margin: 4px 0 6px; font-size: 20px; }
 .card p { margin: 0 0 14px; color: var(--muted); font-size: 15px; flex: 1; }
 .card-buttons { display: flex; gap: 8px; }
+.card-buttons .btn { flex: 1; padding: 8px 10px; white-space: nowrap; }
 
 /* ---------- Маршрут ---------- */
 .route-box { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 20px; }

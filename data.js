@@ -1,6 +1,7 @@
 // Данные сайта: места и туры.
 // У каждого текста три перевода: ru — русский, kk — казахский, en — английский.
 // Фото места лежит в папке images/ и называется так же, как id (например images/giza.jpg).
+// wiki — статья Википедии, откуда берётся фото; photo — если нужно другое фото с Wikimedia Commons.
 
 const CATEGORIES = {
   ancient: { ru: "Древности", kk: "Көне мұралар", en: "Antiquities" },
@@ -41,7 +42,7 @@ const PLACES = [
     }
   },
   {
-    id: "gem", wiki: "Grand_Egyptian_Museum", cat: "museum", lat: 29.9946, lng: 31.1196, hours: 4,
+    id: "gem", wiki: "Grand_Egyptian_Museum", photo: "Entrance Grand Egyptian museum.jpg", cat: "museum", lat: 29.9946, lng: 31.1196, hours: 4,
     name: { ru: "Большой Египетский музей", kk: "Ұлы Египет мұражайы", en: "Grand Egyptian Museum" },
     city: { ru: "Гиза (Каир)", kk: "Гиза (Каир)", en: "Giza (Cairo)" },
     short: {
@@ -116,7 +117,7 @@ const PLACES = [
     }
   },
   {
-    id: "hurghada", wiki: "Hurghada", cat: "sea", lat: 27.2579, lng: 33.8116, hours: 6,
+    id: "hurghada", wiki: "Hurghada", photo: "Hurghada beach 02.JPG", cat: "sea", lat: 27.2579, lng: 33.8116, hours: 6,
     name: { ru: "Хургада", kk: "Хургада", en: "Hurghada" },
     city: { ru: "Красное море", kk: "Қызыл теңіз", en: "Red Sea" },
     short: {
