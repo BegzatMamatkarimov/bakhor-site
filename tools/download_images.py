@@ -1,17 +1,14 @@
 """
-Скачивает фото всех мест из Википедии в папку images/
-и записывает авторов и лицензии в images/images.js.
+Скачивает фото всех мест из Википедии в папку images/.
+Фото сохраняются как images/<id>.jpg, а авторы и лицензии — в images/CREDITS.md.
 
 Запуск из папки проекта (нужен Python 3 и интернет):
     python tools/download_images.py
-
-Ничего устанавливать не нужно — только стандартная библиотека Python.
+На Windows можно просто дважды нажать на tools/download_images.bat
 """
 
-import html
 import json
 import re
-import sys
 import time
 import urllib.parse
 import urllib.request
@@ -19,94 +16,73 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 IMAGES = ROOT / "images"
-WIDTH = 1200  # ширина фото в пикселях — хватает для карточек и окна места
-HEADERS = {"User-Agent": "EgyptWay-student-project/1.0 (educational website)"}
+WIDTH = 1000  # ширина фото в пикселях
+HEADERS = {"User-Agent": "EgyptWay-student-project/1.0"}
 
 
-def get(url):
-    req = urllib.request.Request(url, headers=HEADERS)
-    with urllib.request.urlopen(req, timeout=30) as res:
-        return res.read()
+def download(url):
+    request = urllib.request.Request(url, headers=HEADERS)
+    with urllib.request.urlopen(request, timeout=30) as response:
+        return response.read()
 
 
-def get_json(url):
-    return json.loads(get(url).decode("utf-8"))
+def download_json(url):
+    return json.loads(download(url).decode("utf-8"))
 
 
-def strip_tags(text):
-    return html.unescape(re.sub(r"<[^>]+>", "", text or "")).strip()
+def clean(text):
+    return re.sub(r"<[^>]+>", "", text or "").strip()
 
 
-def credits_for(file_name):
-    """Автор, лицензия и страница файла на Wikimedia Commons."""
-    api = (
+def get_credits(file_name):
+    url = (
         "https://commons.wikimedia.org/w/api.php?action=query&format=json"
-        "&prop=imageinfo&iiprop=url|extmetadata&titles="
-        + urllib.parse.quote("File:" + file_name)
+        "&prop=imageinfo&iiprop=url|extmetadata&titles=" + urllib.parse.quote("File:" + file_name)
     )
-    pages = get_json(api)["query"]["pages"]
-    info = next(iter(pages.values())).get("imageinfo", [{}])[0]
+    page = next(iter(download_json(url)["query"]["pages"].values()))
+    info = page.get("imageinfo", [{}])[0]
     meta = info.get("extmetadata", {})
-    return {
-        "author": strip_tags(meta.get("Artist", {}).get("value", "")),
-        "license": strip_tags(meta.get("LicenseShortName", {}).get("value", "")),
-        "source": info.get("descriptionurl", ""),
-    }
+    author = clean(meta.get("Artist", {}).get("value")) or "неизвестен"
+    license_name = clean(meta.get("LicenseShortName", {}).get("value"))
+    return author, license_name, info.get("descriptionurl", "")
 
 
 def main():
     data = (ROOT / "data.js").read_text(encoding="utf-8")
-    sights = re.findall(r'id: "(\w+)", wiki: "([^"]+)"', data)
-    if not sights:
-        sys.exit("Не нашёл места в data.js")
-
+    places = re.findall(r'id: "(\w+)", wiki: "([^"]+)"', data)
     IMAGES.mkdir(exist_ok=True)
-    result = {}
+    credits = ["# Фото\n", "Все фото взяты с Wikimedia Commons.\n"]
+    done = 0
 
-    for sight_id, wiki in sights:
-        print(f"→ {sight_id} ({wiki}) … ", end="", flush=True)
+    for place_id, wiki in places:
+        print(f"{place_id}: ", end="", flush=True)
         try:
-            summary = get_json(
+            summary = download_json(
                 "https://en.wikipedia.org/api/rest_v1/page/summary/" + urllib.parse.quote(wiki)
             )
-            original = summary.get("originalimage", {})
-            thumb = summary.get("thumbnail", {})
+            original = summary.get("originalimage")
             if not original:
-                print("нет фото в статье")
+                print("в статье нет фото")
                 continue
 
-            # Берём уменьшенную копию шириной WIDTH, если оригинал больше
             url = original["source"]
+            thumb = summary.get("thumbnail")
             if thumb and original.get("width", 0) > WIDTH:
                 url = re.sub(r"/\d+px-", f"/{WIDTH}px-", thumb["source"])
 
-            ext = Path(urllib.parse.urlparse(url).path).suffix.lower() or ".jpg"
-            if ext not in (".jpg", ".jpeg", ".png", ".webp"):
-                ext = ".jpg"
-            file_path = IMAGES / f"{sight_id}{ext}"
-            file_path.write_bytes(get(url))
+            (IMAGES / f"{place_id}.jpg").write_bytes(download(url))
 
-            file_name = urllib.parse.unquote(urllib.parse.urlparse(original["source"]).path.split("/")[-1])
-            info = credits_for(file_name)
-            result[sight_id] = {
-                "file": f"images/{file_path.name}",
-                "author": html.escape(info["author"])[:120],
-                "license": html.escape(info["license"]),
-                "source": info["source"],
-            }
-            print(f"ok ({file_path.stat().st_size // 1024} КБ)")
-        except Exception as error:  # одно неудачное фото не должно останавливать остальные
-            print(f"ошибка: {error}")
-        time.sleep(0.5)  # не нагружаем серверы Википедии
+            file_name = urllib.parse.unquote(original["source"].split("/")[-1])
+            author, license_name, page_url = get_credits(file_name)
+            credits.append(f"- **{place_id}.jpg** — автор: {author}, лицензия: {license_name}, источник: {page_url}")
+            done += 1
+            print("скачано")
+        except Exception as error:
+            print(f"ошибка — {error}")
+        time.sleep(0.5)
 
-    js = (
-        "// Скачанные фото мест. Файл перезаписывается скриптом tools/download_images.py\n"
-        "const LOCAL_IMAGES = "
-        + json.dumps(result, ensure_ascii=False, indent=2)
-        + ";\n"
-    )
-    (IMAGES / "images.js").write_text(js, encoding="utf-8")
-    print(f"\nГотово: {len(result)} из {len(sights)} фото в папке images/")
+    (IMAGES / "CREDITS.md").write_text("\n".join(credits) + "\n", encoding="utf-8")
+    print(f"\nГотово: {done} из {len(places)} фото в папке images/")
 
 
 if __name__ == "__main__":

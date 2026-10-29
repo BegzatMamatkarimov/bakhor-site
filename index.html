@@ -1,354 +1,186 @@
 <!DOCTYPE html>
-<html lang="ru" data-theme="light">
+<html lang="ru">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Египет — путеводитель и конструктор маршрута</title>
-  <meta name="description" content="Достопримечательности Египта: карта, описание, готовые туры и конструктор своего маршрута.">
-
-  <!-- Шрифты с поддержкой кириллицы (Lora — для казахских букв в заголовках) -->
+  <title>EgyptWay — путеводитель по Египту</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Lora:wght@600;700&family=Manrope:wght@400;500;600;700;800&family=Playfair+Display:wght@600;700;800&display=swap" rel="stylesheet">
-
-  <!-- Leaflet — бесплатная библиотека для карты (лежит в проекте, CDN не нужен) -->
-  <link rel="stylesheet" href="vendor/leaflet/leaflet.css">
-
+  <link href="https://fonts.googleapis.com/css2?family=Lora:wght@600;700&family=Manrope:wght@400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-  <!-- Полоса прогресса прокрутки -->
-  <div class="progress" id="progress"></div>
-
-  <!-- ===== ШАПКА ===== -->
-  <header class="header" id="header">
-    <div class="container header__inner">
-      <button class="logo" data-go="home" data-i18n-aria="nav.home">
-        <svg class="logo__mark" viewBox="0 0 32 32" aria-hidden="true"><path d="M16 3 L30 28 H2 Z" fill="currentColor"/><path d="M16 3 L30 28 H19 Z" fill="#000" opacity=".25"/></svg>
-        <span class="logo__text">Egypt<b>Way</b></span>
-      </button>
+  <!-- Шапка с меню -->
+  <header class="header">
+    <div class="container header-inner">
+      <a href="#home" class="logo">Egypt<span>Way</span></a>
 
       <nav class="nav" id="nav">
-        <button class="nav__link" data-go="home" data-i18n="nav.home">Главная</button>
-        <button class="nav__link" data-go="sights" data-i18n="nav.sights">Места</button>
-        <button class="nav__link" data-go="map" data-i18n="nav.map">Карта</button>
-        <button class="nav__link" data-go="route" data-i18n="nav.route">Маршрут</button>
-        <button class="nav__link" data-go="tours" data-i18n="nav.tours">Туры</button>
-        <button class="nav__link" data-go="tips" data-i18n="nav.tips">Советы</button>
-        <button class="nav__link" data-go="contacts" data-i18n="nav.contacts">Контакты</button>
-        <!-- Переключатель языка внутри мобильного меню -->
-        <div class="lang lang--menu" role="group" aria-label="Language">
-          <button data-lang="kk">ҚАЗ</button><button data-lang="ru">РУС</button><button data-lang="en">ENG</button>
-        </div>
+        <a href="#home" data-i18n="nav.home">Главная</a>
+        <a href="#places" data-i18n="nav.places">Места</a>
+        <a href="#route" data-i18n="nav.route">Маршрут</a>
+        <a href="#tours" data-i18n="nav.tours">Туры</a>
+        <a href="#tips" data-i18n="nav.tips">Советы</a>
+        <a href="#contacts" data-i18n="nav.contacts">Контакты</a>
       </nav>
 
-      <div class="header__actions">
-        <div class="lang lang--header" role="group" aria-label="Language">
-          <button data-lang="kk">ҚАЗ</button><button data-lang="ru">РУС</button><button data-lang="en">ENG</button>
+      <div class="header-buttons">
+        <div class="lang">
+          <button data-lang="kk">ҚАЗ</button>
+          <button data-lang="ru">РУС</button>
+          <button data-lang="en">ENG</button>
         </div>
-        <button class="icon-btn route-badge" data-go="route" data-i18n-aria="aria.myRoute" data-i18n-title="aria.myRoute">
-          🧭<span class="route-badge__count" id="routeCount">0</span>
-        </button>
-        <button class="icon-btn" id="themeToggle" data-i18n-aria="aria.theme" data-i18n-title="aria.theme">🌙</button>
-        <button class="icon-btn burger" id="burger" data-i18n-aria="aria.menu">☰</button>
+        <button class="icon-btn" id="themeBtn" title="Тема">🌙</button>
+        <button class="icon-btn burger" id="burger">☰</button>
       </div>
     </div>
   </header>
 
-  <!-- Точечная навигация сбоку -->
-  <aside class="dots" id="dots" aria-label="Sections">
-    <button data-go="home" data-i18n-title="nav.home"></button>
-    <button data-go="sights" data-i18n-title="nav.sights"></button>
-    <button data-go="map" data-i18n-title="nav.map"></button>
-    <button data-go="route" data-i18n-title="nav.route"></button>
-    <button data-go="tours" data-i18n-title="nav.tours"></button>
-    <button data-go="tips" data-i18n-title="nav.tips"></button>
-    <button data-go="contacts" data-i18n-title="nav.contacts"></button>
-  </aside>
+  <!-- Главный экран -->
+  <section class="hero" id="home">
+    <svg class="hero-pyramids" viewBox="0 0 1440 400" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
+      <polygon class="p1" points="520,320 720,60 920,320"/>
+      <polygon class="p1-shade" points="720,60 920,320 770,320"/>
+      <polygon class="p2" points="880,320 1010,150 1140,320"/>
+      <path class="sand" d="M0,310 C300,270 520,340 820,300 C1080,270 1260,330 1440,300 L1440,400 L0,400 Z"/>
+    </svg>
+    <div class="container hero-content">
+      <p class="hero-small" data-i18n="hero.small">Путеводитель по Египту</p>
+      <h1 data-i18n="hero.title">Египет — путешествие во времени</h1>
+      <p class="hero-text" data-i18n="hero.text">Пирамиды, храмы на Ниле и Красное море.</p>
+      <a href="#places" class="btn btn-gold" data-i18n="hero.btn1">Смотреть места</a>
+      <a href="#route" class="btn btn-light" data-i18n="hero.btn2">Мой маршрут</a>
+    </div>
+  </section>
 
-  <main>
-    <!-- ===== ГЛАВНАЯ ===== -->
-    <section class="hero" id="home">
-      <div class="hero__sky">
-        <div class="hero__sun"></div>
-        <div class="hero__stars"></div>
-      </div>
-      <svg class="hero__dunes" viewBox="0 0 1440 420" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
-        <polygon class="pyr pyr--far" points="880,300 1010,120 1140,300"/>
-        <polygon class="pyr pyr--far-shade" points="1010,120 1140,300 1040,300"/>
-        <polygon class="pyr" points="520,320 720,40 920,320"/>
-        <polygon class="pyr-shade" points="720,40 920,320 770,320"/>
-        <polygon class="pyr pyr--small" points="1080,320 1170,200 1260,320"/>
-        <path class="dune dune--1" d="M0,300 C240,250 420,330 720,300 C1000,270 1200,330 1440,290 L1440,420 L0,420 Z"/>
-        <path class="dune dune--2" d="M0,350 C300,320 520,390 820,350 C1080,320 1260,380 1440,350 L1440,420 L0,420 Z"/>
-      </svg>
+  <!-- Достопримечательности -->
+  <section class="section" id="places">
+    <div class="container">
+      <h2 data-i18n="places.title">Достопримечательности</h2>
+      <p class="section-text" data-i18n="places.text">Нажмите на карточку, чтобы прочитать подробнее.</p>
 
-      <div class="container hero__content">
-        <p class="eyebrow reveal" data-i18n="hero.eyebrow">Путеводитель · 5000 лет истории</p>
-        <h1 class="hero__title reveal"><span class="hero__t1" data-i18n="hero.title1">Египет:</span><br><span class="hero__t2" data-i18n="hero.title2">путешествие во времени</span></h1>
-        <p class="hero__lead reveal" data-i18n="hero.lead">Пирамиды, храмы на Ниле, Красное море и пустыня. Выбирайте места, смотрите их на карте и собирайте свой маршрут по дням.</p>
-        <div class="hero__cta reveal">
-          <button class="btn btn--primary" data-go="sights" data-i18n="hero.cta1">Смотреть места ↓</button>
-          <button class="btn btn--ghost" data-go="route" data-i18n="hero.cta2">Построить маршрут</button>
-        </div>
-        <div class="stats reveal">
-          <div class="stat"><b data-count="16">0</b><span data-i18n="stat.places">мест в гиде</span></div>
-          <div class="stat"><b data-count="3">0</b><span data-i18n="stat.tours">готовых тура</span></div>
-          <div class="stat"><b data-count="1200">0</b><span data-i18n="stat.nile">км по Нилу</span></div>
-        </div>
+      <div class="toolbar">
+        <div class="filters" id="filters"></div>
+        <input type="search" id="search" class="search" data-i18n-placeholder="places.search" placeholder="Поиск…">
       </div>
 
-      <button class="scroll-hint" data-go="sights" aria-label="↓"><span></span></button>
-    </section>
+      <div class="cards" id="cards"></div>
+      <p class="empty" id="empty" hidden data-i18n="places.empty">Ничего не найдено.</p>
+    </div>
+  </section>
 
-    <!-- ===== ДОСТОПРИМЕЧАТЕЛЬНОСТИ ===== -->
-    <section class="section" id="sights">
-      <div class="container">
-        <div class="section__head reveal">
-          <p class="eyebrow" data-i18n="sights.eyebrow">Что посмотреть</p>
-          <h2 class="section__title" data-i18n="sights.title">Достопримечательности</h2>
-          <p class="section__lead" data-i18n="sights.lead">Нажмите на карточку, чтобы прочитать подробнее.</p>
+  <!-- Маршрут -->
+  <section class="section section-alt" id="route">
+    <div class="container">
+      <h2 data-i18n="route.title">Мой маршрут</h2>
+      <p class="section-text" data-i18n="route.text">Добавляйте места и меняйте порядок стрелками.</p>
+
+      <div class="route-box">
+        <ol class="route-list" id="routeList"></ol>
+        <p class="empty" id="routeEmpty" data-i18n="route.empty">Маршрут пока пуст.</p>
+
+        <div class="route-total">
+          <div><span data-i18n="route.places">Мест</span><b id="totalPlaces">0</b></div>
+          <div><span data-i18n="route.km">Расстояние</span><b id="totalKm">0</b></div>
+          <div><span data-i18n="route.hours">Время на осмотр</span><b id="totalHours">0</b></div>
         </div>
+        <p class="note" data-i18n="route.note">Расстояние примерное.</p>
 
-        <div class="toolbar reveal">
-          <!-- Кнопки фильтров создаются в script.js -->
-          <div class="chips" id="filters"></div>
-          <label class="search">
-            <span>🔍</span>
-            <input type="search" id="search" data-i18n-ph="search.ph" placeholder="Поиск: Луксор, храм, море…">
-          </label>
-        </div>
-
-        <div class="grid" id="grid"></div>
-        <p class="empty" id="empty" hidden data-i18n="sights.empty">Ничего не найдено.</p>
-      </div>
-    </section>
-
-    <!-- ===== КАРТА ===== -->
-    <section class="section section--alt" id="map">
-      <div class="container">
-        <div class="section__head reveal">
-          <p class="eyebrow" data-i18n="map.eyebrow">Где это находится</p>
-          <h2 class="section__title" data-i18n="map.title">Интерактивная карта</h2>
-          <p class="section__lead" data-i18n="map.lead">Нажмите на точку, чтобы увидеть место.</p>
-        </div>
-
-        <div class="map-wrap reveal">
-          <div class="map" id="leafletMap">
-            <div class="map__fallback" id="mapFallback" hidden data-i18n="map.fallback">Карта не загрузилась.</div>
-          </div>
-          <div class="map-side">
-            <h3 data-i18n="map.show">Показать на карте</h3>
-            <div class="legend" id="legend"></div>
-            <div class="map-side__btns">
-              <button class="btn btn--small" id="fitAll" data-i18n="map.all">Вся страна</button>
-              <button class="btn btn--small" id="fitRoute" data-i18n="map.myRoute">Мой маршрут</button>
-            </div>
-            <p class="hint" data-i18n="map.hint">Совет: в окне точки есть кнопка «В маршрут».</p>
-          </div>
+        <div class="route-buttons">
+          <button class="btn btn-gold" id="gmapsBtn" data-i18n="route.gmaps">Маршрут в Google Maps</button>
+          <button class="btn" id="clearBtn" data-i18n="route.clear">Очистить</button>
         </div>
       </div>
-    </section>
+    </div>
+  </section>
 
-    <!-- ===== КОНСТРУКТОР МАРШРУТА ===== -->
-    <section class="section" id="route">
-      <div class="container">
-        <div class="section__head reveal">
-          <p class="eyebrow" data-i18n="route.eyebrow">Своё путешествие</p>
-          <h2 class="section__title" data-i18n="route.title">Конструктор маршрута</h2>
-          <p class="section__lead" data-i18n="route.lead">Добавляйте места и меняйте порядок.</p>
+  <!-- Готовые туры -->
+  <section class="section" id="tours">
+    <div class="container">
+      <h2 data-i18n="tours.title">Готовые туры</h2>
+      <div class="tours" id="toursList"></div>
+    </div>
+  </section>
+
+  <!-- Советы -->
+  <section class="section section-alt" id="tips">
+    <div class="container">
+      <h2 data-i18n="tips.title">Советы туристу</h2>
+      <div class="tips">
+        <div class="tip-card">
+          <h3 data-i18n="tips.visa">Виза</h3>
+          <ul data-i18n-html="tips.visaText"></ul>
         </div>
-
-        <div class="route reveal">
-          <div class="route__panel">
-            <div class="route__add">
-              <select id="addSelect" data-i18n-aria="route.choose"></select>
-              <button class="btn btn--primary btn--small" id="addBtn" data-i18n="route.add">+ Добавить</button>
-            </div>
-
-            <ol class="stops" id="stops"></ol>
-            <div class="stops-empty" id="stopsEmpty">
-              <p data-i18n="route.emptyTitle">🐪 Маршрут пока пуст</p>
-              <span data-i18n="route.emptyText">Добавьте места.</span>
-              <button class="btn btn--small" data-go="tours" data-i18n="route.toTours">Готовые туры</button>
-            </div>
-
-            <div class="route__tools">
-              <button class="btn btn--small" id="optimizeBtn" data-i18n="route.optimize" data-i18n-title="route.optimizeTitle">⚡ Оптимизировать</button>
-              <button class="btn btn--small" id="showOnMapBtn" data-i18n="route.onMap">🗺 На карте</button>
-              <button class="btn btn--small" id="gmapsBtn" data-i18n="route.gmaps">📍 Google Maps</button>
-              <button class="btn btn--small" id="shareBtn" data-i18n="route.share">🔗 Ссылка</button>
-              <button class="btn btn--small" id="printBtn" data-i18n="route.print">🖨 Печать</button>
-              <button class="btn btn--small btn--danger" id="clearBtn" data-i18n="route.clear">Очистить</button>
-            </div>
-          </div>
-
-          <div class="route__summary">
-            <label class="field">
-              <span data-i18n="route.date">Дата начала поездки</span>
-              <input type="date" id="startDate">
-            </label>
-            <label class="field">
-              <span data-i18n="route.pace">Темп поездки</span>
-              <select id="pace">
-                <option value="7" data-i18n="pace.7">Спокойный</option>
-                <option value="9" data-i18n="pace.9" selected>Обычный</option>
-                <option value="12" data-i18n="pace.12">Активный</option>
-              </select>
-            </label>
-
-            <div class="summary">
-              <div><b id="sumStops">0</b><span data-i18n="sum.stops">мест</span></div>
-              <div><b id="sumKm">0</b><span data-i18n="sum.km">км в пути</span></div>
-              <div><b id="sumDays">0</b><span data-i18n="sum.days">дней</span></div>
-            </div>
-
-            <h3 class="plan-title" data-i18n="plan.title">План по дням</h3>
-            <div class="plan" id="plan"></div>
-          </div>
+        <div class="tip-card">
+          <h3 data-i18n="tips.money">Деньги</h3>
+          <ul data-i18n-html="tips.moneyText"></ul>
+        </div>
+        <div class="tip-card">
+          <h3 data-i18n="tips.rules">Правила</h3>
+          <ul data-i18n-html="tips.rulesText"></ul>
         </div>
       </div>
-    </section>
+    </div>
+  </section>
 
-    <!-- ===== ГОТОВЫЕ ТУРЫ ===== -->
-    <section class="section section--alt" id="tours">
-      <div class="container">
-        <div class="section__head reveal">
-          <p class="eyebrow" data-i18n="tours.eyebrow">Не знаете, с чего начать?</p>
-          <h2 class="section__title" data-i18n="tours.title">Готовые туры</h2>
-          <p class="section__lead" data-i18n="tours.lead">Загрузите тур в конструктор одним нажатием.</p>
-        </div>
-        <div class="tours" id="toursList"></div>
-      </div>
-    </section>
-
-    <!-- ===== СОВЕТЫ ===== -->
-    <section class="section" id="tips">
-      <div class="container">
-        <div class="section__head reveal">
-          <p class="eyebrow" data-i18n="tips.eyebrow">Полезно знать</p>
-          <h2 class="section__title" data-i18n="tips.title">Советы туристу</h2>
+  <!-- Контакты -->
+  <section class="section section-dark" id="contacts">
+    <div class="container">
+      <h2 data-i18n="contacts.title">Контакты</h2>
+      <div class="contacts">
+        <div class="contact-card">
+          <h3 data-i18n="contacts.phone">Наш телефон</h3>
+          <a class="phone" href="tel:+77476819247">+7 (747) 681-92-47</a>
         </div>
 
-        <div class="tabs reveal">
-          <div class="tabs__list" role="tablist">
-            <button class="tab is-active" data-tab="weather" role="tab" data-i18n="tab.weather">☀️ Погода</button>
-            <button class="tab" data-tab="visa" role="tab" data-i18n="tab.visa">🛂 Виза</button>
-            <button class="tab" data-tab="money" role="tab" data-i18n="tab.money">💵 Деньги</button>
-            <button class="tab" data-tab="safety" role="tab" data-i18n="tab.safety">🛡 Правила</button>
-            <button class="tab" data-tab="phrases" role="tab" data-i18n="tab.phrases">🗣 Фразы</button>
-          </div>
+        <div class="contact-card">
+          <h3 data-i18n="contacts.emergency">Экстренные номера в Египте</h3>
+          <ul class="emergency">
+            <li><a href="tel:126">126</a> <span data-i18n="contacts.tourist">Туристическая полиция</span></li>
+            <li><a href="tel:122">122</a> <span data-i18n="contacts.police">Полиция</span></li>
+            <li><a href="tel:123">123</a> <span data-i18n="contacts.ambulance">Скорая помощь</span></li>
+            <li><a href="tel:180">180</a> <span data-i18n="contacts.fire">Пожарная служба</span></li>
+          </ul>
+        </div>
 
-          <div class="tab-panel is-active" data-panel="weather">
-            <p data-i18n="weather.intro">Выберите месяц.</p>
-            <div class="months" id="months"></div>
-            <div class="weather" id="weather"></div>
-          </div>
-          <div class="tab-panel" data-panel="visa"><ul class="list" data-i18n-html="visa.list"></ul></div>
-          <div class="tab-panel" data-panel="money"><ul class="list" data-i18n-html="money.list"></ul></div>
-          <div class="tab-panel" data-panel="safety"><ul class="list" data-i18n-html="safety.list"></ul></div>
-          <div class="tab-panel" data-panel="phrases">
-            <p data-i18n="phrases.intro">Нажмите на фразу.</p>
-            <div class="phrases" id="phrases"></div>
-          </div>
+        <div class="contact-card">
+          <h3 data-i18n="contacts.links">Полезные сайты</h3>
+          <ul class="links">
+            <li><a href="https://www.egypt.travel" target="_blank">egypt.travel</a> — <span data-i18n="links.egypt">Официальный туристический сайт</span></li>
+            <li><a href="https://www.visa2egypt.gov.eg" target="_blank">visa2egypt.gov.eg</a> — <span data-i18n="links.visa">Электронная виза</span></li>
+            <li><a href="https://egymonuments.gov.eg" target="_blank">egymonuments.gov.eg</a> — <span data-i18n="links.monuments">Музеи и памятники</span></li>
+            <li><a href="https://www.booking.com/country/eg.html" target="_blank">booking.com</a> — <span data-i18n="links.booking">Бронирование отелей</span></li>
+          </ul>
         </div>
       </div>
-    </section>
-
-    <!-- ===== КОНТАКТЫ ===== -->
-    <section class="section section--dark" id="contacts">
-      <div class="container">
-        <div class="section__head reveal">
-          <p class="eyebrow" data-i18n="contacts.eyebrow">Связь и ссылки</p>
-          <h2 class="section__title" data-i18n="contacts.title">Контакты</h2>
-        </div>
-
-        <div class="contacts reveal">
-          <div class="card-contact">
-            <h3 data-i18n="contacts.phone">📞 Наш телефон</h3>
-            <a class="big-phone" href="tel:+77476819247">+7 (747) 681-92-47</a>
-            <p class="hint" data-i18n="contacts.phoneHint">Учебный проект.</p>
-            <form class="form" id="form">
-              <input type="text" name="name" data-i18n-ph="form.name" placeholder="Ваше имя" required>
-              <input type="text" name="phone" data-i18n-ph="form.contact" placeholder="Телефон или e-mail" required>
-              <textarea name="msg" rows="3" data-i18n-ph="form.msg" placeholder="Вопрос или пожелание к туру"></textarea>
-              <label class="check"><input type="checkbox" id="attachRoute" checked> <span data-i18n="form.attach">Прикрепить мой маршрут</span></label>
-              <button class="btn btn--primary" type="submit" data-i18n="form.send">Отправить</button>
-            </form>
-          </div>
-
-          <div class="card-contact">
-            <h3 data-i18n="emergency.title">🚨 Экстренные номера в Египте</h3>
-            <ul class="emergency">
-              <li><a href="tel:126"><b>126</b> <span data-i18n="emergency.tourist">Туристическая полиция</span></a></li>
-              <li><a href="tel:122"><b>122</b> <span data-i18n="emergency.police">Полиция</span></a></li>
-              <li><a href="tel:123"><b>123</b> <span data-i18n="emergency.ambulance">Скорая помощь</span></a></li>
-              <li><a href="tel:180"><b>180</b> <span data-i18n="emergency.fire">Пожарная служба</span></a></li>
-            </ul>
-          </div>
-
-          <div class="card-contact card-contact--wide">
-            <h3 data-i18n="links.title">🌐 Полезные сайты</h3>
-            <div class="links">
-              <a href="https://www.egypt.travel" target="_blank" rel="noopener"><b>Experience Egypt</b><span data-i18n="links.egypt">Официальный туристический портал</span></a>
-              <a href="https://www.visa2egypt.gov.eg" target="_blank" rel="noopener"><b>Visa2Egypt</b><span data-i18n="links.visa">Официальная электронная виза</span></a>
-              <a href="https://egymonuments.gov.eg" target="_blank" rel="noopener"><b>Egypt Monuments</b><span data-i18n="links.monuments">Музеи и памятники, часы работы, билеты</span></a>
-              <a href="https://visit-gem.com" target="_blank" rel="noopener"><b data-i18n="links.gemName">Большой Египетский музей</b><span data-i18n="links.gem">Билеты в GEM</span></a>
-              <a href="https://www.tripadvisor.com/Tourism-g294200-Egypt-Vacations.html" target="_blank" rel="noopener"><b>Tripadvisor</b><span data-i18n="links.trip">Отзывы, экскурсии, рестораны</span></a>
-              <a href="https://www.booking.com/country/eg.html" target="_blank" rel="noopener"><b>Booking.com</b><span data-i18n="links.booking">Отели по всему Египту</span></a>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-  </main>
+    </div>
+  </section>
 
   <footer class="footer">
-    <div class="container footer__inner">
-      <span data-i18n="footer.text">© EgyptWay — учебный проект.</span>
-      <button class="btn btn--small" data-go="home" data-i18n="footer.top">Наверх ↑</button>
-    </div>
+    <div class="container" data-i18n="footer">EgyptWay — учебный проект.</div>
   </footer>
 
-  <!-- Кнопка «наверх» -->
-  <button class="to-top" id="toTop" data-go="home" data-i18n-aria="aria.toTop">↑</button>
+  <!-- Кнопка «Наверх» -->
+  <a href="#home" class="to-top" id="toTop" data-i18n-title="top" title="Наверх">↑</a>
 
-  <!-- Модальное окно места -->
-  <div class="modal" id="modal" aria-hidden="true">
-    <div class="modal__backdrop" data-close></div>
-    <div class="modal__box" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
-      <button class="modal__close" data-close data-i18n-aria="aria.close">✕</button>
-      <div class="modal__img" id="modalImg"></div>
-      <div class="modal__body">
-        <span class="badge" id="modalCat"></span>
-        <h3 id="modalTitle"></h3>
-        <p class="modal__city" id="modalCity"></p>
-        <p id="modalDesc"></p>
-        <div class="facts" id="modalFacts"></div>
-        <p class="tip" id="modalTip"></p>
-        <p class="credit" id="modalCredit" hidden></p>
-        <div class="modal__btns">
-          <button class="btn btn--primary" id="modalAdd"></button>
-          <button class="btn" id="modalMap" data-i18n="btn.onMap">🗺 На карте</button>
-          <button class="btn" id="modalFav"></button>
-          <a class="btn" id="modalWiki" target="_blank" rel="noopener" data-i18n="btn.wiki">📖 Википедия</a>
-        </div>
-        <div class="modal__nav">
-          <button class="btn btn--small" id="modalPrev" data-i18n="btn.prev">← Предыдущее</button>
-          <button class="btn btn--small" id="modalNext" data-i18n="btn.next">Следующее →</button>
-        </div>
+  <!-- Окно с подробным описанием места -->
+  <dialog class="modal" id="modal">
+    <img class="modal-img" id="modalImg" alt="">
+    <div class="modal-body">
+      <h3 id="modalTitle"></h3>
+      <p class="modal-city" id="modalCity"></p>
+      <p id="modalDesc"></p>
+      <p class="modal-time"><span data-i18n="modal.time">Время на посещение</span>: <b id="modalTime"></b></p>
+      <div class="modal-buttons">
+        <button class="btn btn-gold" id="modalRoute"></button>
+        <a class="btn" id="modalMap" target="_blank" data-i18n="btn.gmaps">Открыть в Google Maps</a>
+        <button class="btn" id="modalClose" data-i18n="btn.close">Закрыть</button>
       </div>
     </div>
-  </div>
+  </dialog>
 
-  <!-- Всплывающие уведомления -->
-  <div class="toasts" id="toasts"></div>
-
-  <script src="vendor/leaflet/leaflet.js"></script>
   <script src="data.js"></script>
-  <!-- Список скачанных фото; заполняется скриптом tools/download_images.py -->
-  <script src="images/images.js"></script>
   <script src="i18n.js"></script>
   <script src="script.js"></script>
 </body>
