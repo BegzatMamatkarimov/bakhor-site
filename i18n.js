@@ -27,7 +27,8 @@ const I18N = {
 
     "map.eyebrow": "Где это находится", "map.title": "Интерактивная карта",
     "map.lead": "Нажмите на точку, чтобы увидеть место. Золотая линия — ваш маршрут.",
-    "map.fallback": "Карта не загрузилась — нужен интернет (библиотека Leaflet грузится из сети).",
+    "map.fallback": "Карта не загрузилась — проверьте подключение к интернету: подложка карты грузится из сети.",
+    "photo": "Фото",
     "map.show": "Показать на карте", "map.all": "Вся страна", "map.myRoute": "Мой маршрут",
     "map.hint": "Совет: в окне точки есть кнопка «В маршрут».",
 
@@ -129,7 +130,8 @@ const I18N = {
 
     "map.eyebrow": "Бұл қай жерде", "map.title": "Интерактивті карта",
     "map.lead": "Орынды көру үшін нүктені басыңыз. Алтын сызық — сіздің маршрутыңыз.",
-    "map.fallback": "Карта жүктелмеді — интернет қажет (Leaflet кітапханасы желіден жүктеледі).",
+    "map.fallback": "Карта жүктелмеді — интернетке қосылуды тексеріңіз: карта қабаты желіден жүктеледі.",
+    "photo": "Фото",
     "map.show": "Картада көрсету", "map.all": "Бүкіл ел", "map.myRoute": "Менің маршрутым",
     "map.hint": "Кеңес: нүкте терезесінде «Маршрутқа» батырмасы бар.",
 
@@ -231,7 +233,8 @@ const I18N = {
 
     "map.eyebrow": "Where it is", "map.title": "Interactive map",
     "map.lead": "Tap a pin to see the place. The golden line is your route.",
-    "map.fallback": "The map didn't load — an internet connection is needed (the Leaflet library loads from the web).",
+    "map.fallback": "The map didn't load — check your internet connection: the map tiles load from the web.",
+    "photo": "Photo",
     "map.show": "Show on map", "map.all": "Whole country", "map.myRoute": "My route",
     "map.hint": "Tip: a pin's popup has an “Add to route” button.",
 

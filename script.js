@@ -181,8 +181,12 @@ $("#themeToggle").addEventListener("click", () => {
 // =====================================================
 //  ФОТО: берём картинки из Википедии по названию статьи
 // =====================================================
+// Сначала ищем фото в папке images/ (скачанные скриптом), иначе — берём из Википедии онлайн
+const localImage = (id) => (typeof LOCAL_IMAGES !== "undefined" ? LOCAL_IMAGES[id] : null);
+
 async function loadImage(sight) {
   if (state.images[sight.id] !== undefined) return state.images[sight.id];
+  if (localImage(sight.id)) return (state.images[sight.id] = localImage(sight.id).file);
   try {
     const res = await fetch(`https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(sight.wiki)}`);
     const data = await res.json();
@@ -328,6 +332,12 @@ function fillModal(id) {
     <div><small>${t("modal.visit")}</small>≈ ${s.hours} ${t("unit.h")}</div>
     <div><small>${t("modal.best")}</small>${sightText(s, "best")}</div>`;
   $("#modalTip").textContent = `💡 ${sightText(s, "tip")}`;
+  const photo = localImage(id);
+  $("#modalCredit").hidden = !photo;
+  if (photo) {
+    $("#modalCredit").innerHTML = `📷 ${t("photo")}: ${photo.author || "Wikimedia Commons"}` +
+      `${photo.license ? ` · ${photo.license}` : ""} · <a href="${photo.source}" target="_blank" rel="noopener">Wikimedia Commons</a>`;
+  }
   $("#modalAdd").textContent = state.route.includes(id) ? t("btn.removeRoute") : t("btn.add");
   $("#modalFav").textContent = state.favs.includes(id) ? t("btn.faved") : t("btn.fav");
   $("#modalWiki").href = wikiUrl(s);
@@ -369,21 +379,44 @@ document.addEventListener("keydown", (e) => {
 });
 
 // =====================================================
-//  КАРТА (Leaflet + бесплатные тайлы CARTO)
+//  КАРТА (Leaflet + бесплатные тайлы CARTO, запасные — Esri и OpenStreetMap)
 // =====================================================
 let map = null;
 let tileLayer = null;
 let routeLine = null;
 const markers = {};
 
+// Источники подложки карты. Если первый не грузится (заблокирован сетью),
+// автоматически переключаемся на следующий.
+const OSM = '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>';
+const TILE_PROVIDERS = [
+  { url: (dark) => `https://{s}.basemaps.cartocdn.com/${dark ? "dark_all" : "rastertiles/voyager"}/{z}/{x}/{y}{r}.png`,
+    attribution: `${OSM} &copy; <a href="https://carto.com/">CARTO</a>` },
+  { url: () => "https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}",
+    attribution: "Tiles &copy; Esri" },
+  { url: () => "https://tile.openstreetmap.org/{z}/{x}/{y}.png", attribution: OSM }
+];
+let providerIndex = 0;
+
 function setTiles() {
   const dark = document.documentElement.dataset.theme === "dark";
-  const style = dark ? "dark_all" : "rastertiles/voyager";
+  const provider = TILE_PROVIDERS[providerIndex];
   if (tileLayer) map.removeLayer(tileLayer);
-  tileLayer = L.tileLayer(`https://{s}.basemaps.cartocdn.com/${style}/{z}/{x}/{y}{r}.png`, {
-    maxZoom: 18,
-    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/">CARTO</a>'
-  }).addTo(map);
+  tileLayer = L.tileLayer(provider.url(dark), { maxZoom: 18, attribution: provider.attribution }).addTo(map);
+
+  // Ни одного тайла не загрузилось, а ошибок уже несколько — пробуем другой источник
+  let loaded = false;
+  let errors = 0;
+  tileLayer.on("tileload", () => { loaded = true; });
+  tileLayer.on("tileerror", () => {
+    if (loaded || ++errors < 4) return;
+    if (providerIndex < TILE_PROVIDERS.length - 1) {
+      providerIndex++;
+      setTiles();
+    } else {
+      $("#mapFallback").hidden = false;
+    }
+  });
 }
 
 function pinIcon(s) {
