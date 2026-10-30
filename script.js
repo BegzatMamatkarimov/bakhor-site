@@ -6,6 +6,15 @@ let filter = "all";
 
 const findPlace = (id) => PLACES.find((p) => p.id === id);
 
+// Цена в тенге: 12600 → «12 600 ₸»
+const money = (sum) => sum.toLocaleString("ru-RU") + " ₸";
+
+// Текст про билет места: цена, «бесплатно» или особая пометка (у Сфинкса)
+function ticketText(p) {
+  if (p.ticketText) return p.ticketText[lang];
+  return p.price > 0 ? money(p.price) : t("price.free");
+}
+
 // Текст интерфейса на текущем языке
 function t(key) {
   return TEXTS[lang][key] || TEXTS.ru[key] || key;
@@ -148,6 +157,7 @@ function fillModal() {
   document.getElementById("modalCity").textContent = `${CATEGORIES[p.cat][lang]} · ${p.city[lang]}`;
   document.getElementById("modalDesc").textContent = p.desc[lang];
   document.getElementById("modalTime").textContent = `${p.hours} ${t("unit.h")}`;
+  document.getElementById("modalPrice").textContent = ticketText(p);
   document.getElementById("modalMap").href = `https://www.google.com/maps/search/?api=1&query=${p.lat},${p.lng}`;
   document.getElementById("modalRoute").textContent = route.includes(p.id) ? t("btn.remove") : t("btn.add");
 }
@@ -203,10 +213,12 @@ function showRoute() {
 
   let km = 0;
   let hours = 0;
+  let tickets = 0;
 
   route.forEach((id, i) => {
     const p = findPlace(id);
     hours += p.hours;
+    tickets += p.price;
     if (i > 0) km += distanceKm(findPlace(route[i - 1]), p);
 
     const li = document.createElement("li");
@@ -227,6 +239,7 @@ function showRoute() {
   document.getElementById("totalPlaces").textContent = route.length;
   document.getElementById("totalKm").textContent = `${Math.round(km)} ${t("unit.km")}`;
   document.getElementById("totalHours").textContent = `${hours} ${t("unit.h")}`;
+  document.getElementById("totalTickets").textContent = money(tickets);
 }
 
 // Открываем весь маршрут в Google Maps: точки идут через «/»
@@ -242,17 +255,51 @@ document.getElementById("clearBtn").addEventListener("click", () => {
 });
 
 // ---------- Готовые туры ----------
+
+// Расходы тура: отель считаем по ночам, билеты — по местам тура
+function tourCosts(tour) {
+  const tickets = tour.stops.reduce((sum, id) => sum + findPlace(id).price, 0);
+  const list = [
+    [t("cost.flight"), tour.costs.flight],
+    [`${t("cost.hotel")} (${tour.nights} ${t("cost.nights")} × ${money(tour.hotelPerNight)})`, tour.nights * tour.hotelPerNight],
+    [t("cost.transport"), tour.costs.transport],
+    [t("cost.tickets"), tickets]
+  ];
+  if (tour.costs.excursions) list.push([t("cost.excursions"), tour.costs.excursions]);
+  list.push([t("cost.food"), tour.costs.food], [t("cost.visa"), tour.costs.visa]);
+  return list;
+}
+
+function tourPlanHtml(tour) {
+  return tour.plan.map((item) => {
+    let extra = "";
+    if (item.lunch) extra += `<span>${t("plan.lunch")}: ${MEALS[item.lunch][lang]}</span>`;
+    if (item.hotel) extra += `<span>${t("plan.hotel")}: ${item.hotel}</span>`;
+    return `<li><b>${t("tours.day")} ${item.day}.</b> ${item[lang]}${extra ? `<div class="plan-extra">${extra}</div>` : ""}</li>`;
+  }).join("");
+}
+
 function showTours() {
   const box = document.getElementById("toursList");
   box.innerHTML = "";
   TOURS.forEach((tour) => {
+    const costs = tourCosts(tour);
+    const total = costs.reduce((sum, item) => sum + item[1], 0);
     const div = document.createElement("div");
     div.className = "tour";
     div.innerHTML = `
       <h3>${tour.name[lang]}</h3>
       <span class="tour-days">${tour.days[lang]}</span>
       <p>${tour.text[lang]}</p>
-      <p class="tour-stops">${tour.stops.map((id) => findPlace(id).name[lang]).join(" → ")}</p>
+      <p class="tour-price"><b>≈ ${money(total)}</b> ${t("tours.total")}</p>
+      <details>
+        <summary>${t("tours.details")}</summary>
+        <ol class="plan">${tourPlanHtml(tour)}</ol>
+        <table class="costs">
+          ${costs.map(([name, sum]) => `<tr><td>${name}</td><td>${money(sum)}</td></tr>`).join("")}
+          <tr class="costs-total"><td>${t("cost.total")}</td><td>${money(total)}</td></tr>
+        </table>
+      </details>
       <button class="btn btn-gold">${t("tours.btn")}</button>`;
     div.querySelector("button").addEventListener("click", () => {
       route = [...tour.stops];

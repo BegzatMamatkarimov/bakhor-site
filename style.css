@@ -176,7 +176,7 @@ body.dark .sand { fill: #5a4030; }
   background: var(--bg); color: var(--text); cursor: pointer;
 }
 .stop-buttons button:disabled { opacity: 0.3; cursor: default; }
-.route-total { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 20px; }
+.route-total { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 20px; }
 .route-total div { background: var(--bg); border-radius: 12px; padding: 12px; text-align: center; }
 .route-total span { display: block; font-size: 13px; color: var(--muted); }
 .route-total b { font-size: 24px; color: var(--gold); }
@@ -185,11 +185,22 @@ body.dark .sand { fill: #5a4030; }
 /* ---------- Туры и советы ---------- */
 .tours, .tips, .contacts { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
 .tour, .tip-card { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 22px; }
-.tour { display: flex; flex-direction: column; align-items: flex-start; }
+.tour { display: flex; flex-direction: column; align-items: flex-start; align-self: start; }
 .tour h3, .tip-card h3 { margin: 0 0 4px; }
 .tour-days { color: var(--gold); font-weight: 700; }
 .tour p { color: var(--muted); }
-.tour-stops { font-size: 14px; flex: 1; }
+.tour-price { margin: 0 0 10px; color: var(--muted); }
+.tour-price b { font-size: 24px; color: var(--gold); }
+.tour details { width: 100%; margin-bottom: 16px; flex: 1; }
+.tour summary { cursor: pointer; font-weight: 700; color: var(--gold); }
+.plan { padding-left: 0; list-style: none; margin: 12px 0; font-size: 14px; }
+.plan li { padding: 8px 0; border-bottom: 1px solid var(--line); }
+.plan-extra { color: var(--muted); font-size: 13px; margin-top: 4px; }
+.plan-extra span { display: block; }
+.costs { width: 100%; border-collapse: collapse; font-size: 14px; }
+.costs td { padding: 6px 0; border-bottom: 1px solid var(--line); }
+.costs td:last-child { text-align: right; white-space: nowrap; padding-left: 8px; }
+.costs-total td { font-weight: 700; border-bottom: none; color: var(--gold); }
 .tip-card ul { padding-left: 18px; margin: 10px 0 0; }
 .tip-card li { margin-bottom: 8px; }
 
@@ -251,4 +262,5 @@ body.dark .sand { fill: #5a4030; }
   .lang button { padding: 8px 7px; }
   .search { width: 100%; }
   .route-total b { font-size: 18px; }
+  .route-total { grid-template-columns: 1fr 1fr; }
 }

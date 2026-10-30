@@ -26,6 +26,12 @@ const TEXTS = {
     "route.gmaps": "Маршрут в Google Maps", "route.clear": "Очистить",
     "route.note": "Расстояние примерное — по прямой с поправкой на дороги.",
 
+    "price.ticket": "Билет", "price.free": "бесплатно", "route.tickets": "Билеты",
+    "tours.total": "на человека, примерно", "tours.details": "План по дням и цены",
+    "tours.day": "День", "plan.lunch": "Обед", "plan.hotel": "Ночлег", "tours.note": "Цены средние и примерные, на одного человека, без покупок и сувениров. Они меняются в зависимости от сезона и курса валют. Отели и рестораны указаны для примера — наличие и цены проверяйте на booking.com.",
+    "cost.flight": "Перелёт туда и обратно", "cost.hotel": "Отель", "cost.nights": "ночей",
+    "cost.transport": "Транспорт внутри Египта", "cost.tickets": "Входные билеты",
+    "cost.excursions": "Морская прогулка", "cost.food": "Еда", "cost.visa": "Виза", "cost.total": "Итого",
     "tours.title": "Готовые туры", "tours.btn": "Выбрать тур",
 
     "tips.title": "Советы туристу",
@@ -74,6 +80,12 @@ const TEXTS = {
     "route.gmaps": "Google Maps-тағы маршрут", "route.clear": "Тазалау",
     "route.note": "Қашықтық шамамен алынған — түзу сызықпен, жолға түзету қосылған.",
 
+    "price.ticket": "Билет", "price.free": "тегін", "route.tickets": "Билеттер",
+    "tours.total": "бір адамға, шамамен", "tours.details": "Күндік жоспар және бағалар",
+    "tours.day": "Күн", "plan.lunch": "Түскі ас", "plan.hotel": "Түнеу", "tours.note": "Бағалар орташа әрі шамамен алынған, бір адамға, сауда мен кәдесыйларсыз. Олар маусымға және валюта бағамына қарай өзгереді. Қонақүйлер мен мейрамханалар мысал ретінде берілген — бос орын мен бағаны booking.com-нан тексеріңіз.",
+    "cost.flight": "Барып-қайту ұшуы", "cost.hotel": "Қонақүй", "cost.nights": "түн",
+    "cost.transport": "Египет ішіндегі көлік", "cost.tickets": "Кіру билеттері",
+    "cost.excursions": "Теңіз серуені", "cost.food": "Тамақ", "cost.visa": "Виза", "cost.total": "Барлығы",
     "tours.title": "Дайын турлар", "tours.btn": "Турды таңдау",
 
     "tips.title": "Туристке кеңестер",
@@ -122,6 +134,12 @@ const TEXTS = {
     "route.gmaps": "Route in Google Maps", "route.clear": "Clear",
     "route.note": "The distance is approximate — a straight line adjusted for roads.",
 
+    "price.ticket": "Ticket", "price.free": "free", "route.tickets": "Tickets",
+    "tours.total": "per person, approx.", "tours.details": "Day-by-day plan and prices",
+    "tours.day": "Day", "plan.lunch": "Lunch", "plan.hotel": "Stay", "tours.note": "Prices are average and approximate, per person, excluding shopping and souvenirs. They change with the season and exchange rates. Hotels and restaurants are examples — check availability and prices on booking.com.",
+    "cost.flight": "Return flight", "cost.hotel": "Hotel", "cost.nights": "nights",
+    "cost.transport": "Transport in Egypt", "cost.tickets": "Entrance tickets",
+    "cost.excursions": "Boat trip", "cost.food": "Food", "cost.visa": "Visa", "cost.total": "Total",
     "tours.title": "Ready-made tours", "tours.btn": "Choose tour",
 
     "tips.title": "Travel tips",
