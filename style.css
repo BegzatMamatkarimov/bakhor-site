@@ -102,14 +102,51 @@ a { color: var(--gold); }
   background: linear-gradient(180deg, #1e3a5f 0%, #6b4a6e 40%, #d9824f 75%, #f2c27a 100%);
 }
 body.dark .hero { background: linear-gradient(180deg, #050a18 0%, #14213d 50%, #3b2a4a 85%, #6d4a3e 100%); }
-.hero-pyramids { position: absolute; bottom: 0; left: 0; width: 100%; height: 55%; }
-.p1 { fill: #c98a4b; }
-.p1-shade { fill: #9c6232; }
-.p2 { fill: #b77a43; }
+.hero-sand { position: absolute; bottom: 0; left: 0; width: 100%; height: 40%; }
 .sand { fill: #e0a965; }
-body.dark .p1, body.dark .p2 { fill: #4a3424; }
-body.dark .p1-shade { fill: #2e2017; }
 body.dark .sand { fill: #5a4030; }
+
+/* ---------- 3D-пирамида ----------
+   Основание 220px, высота 140px. Боковая грань — треугольник высотой 178px
+   (по теореме Пифагора: √(140² + 110²)), наклонённый на 38° (arctg 110/140). */
+.pyramid-scene {
+  position: absolute; right: 9%; top: 50%;
+  transform: translateY(-50%);
+  width: 280px;
+  perspective: 900px;
+  display: flex; flex-direction: column; align-items: center;
+  cursor: grab;
+  touch-action: none;   /* чтобы на телефоне палец крутил пирамиду, а не страницу */
+  user-select: none;
+}
+.pyramid-scene:active { cursor: grabbing; }
+.pyramid {
+  position: relative;
+  width: 220px; height: 178px;
+  margin-top: 30px;
+  transform-style: preserve-3d;
+  transform-origin: 50% 100%;
+}
+.face {
+  position: absolute; inset: 0;
+  clip-path: polygon(50% 0, 100% 100%, 0 100%);
+  transform-origin: 50% 100%;
+  /* полоски — ряды каменных блоков */
+  background:
+    repeating-linear-gradient(to bottom, rgba(0, 0, 0, 0.1) 0 2px, transparent 2px 15px),
+    linear-gradient(#f0c27a, #c98a4b);
+}
+.face-front { transform: translateZ(110px) rotateX(38deg); }
+.face-right { transform: rotateY(90deg) translateZ(110px) rotateX(38deg); background-color: #a86f3a; background-blend-mode: multiply; }
+.face-back  { transform: rotateY(180deg) translateZ(110px) rotateX(38deg); }
+.face-left  { transform: rotateY(-90deg) translateZ(110px) rotateX(38deg); background-color: #d9a066; background-blend-mode: multiply; }
+.base {
+  position: absolute; left: 0; top: 68px;
+  width: 220px; height: 220px;
+  background: #7a5230;
+  transform: rotateX(90deg);
+}
+.pyramid-hint { margin: 70px 0 0; font-size: 13px; color: #ffe0a3; text-align: center; }
 
 .hero-content { position: relative; padding-bottom: 20vh; }
 .hero-small { text-transform: uppercase; letter-spacing: 2px; font-weight: 700; color: #ffe0a3; margin: 0; }
@@ -184,6 +221,8 @@ body.dark .sand { fill: #5a4030; }
 
 /* ---------- Туры и советы ---------- */
 .tours, .tips, .contacts { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+.contacts { grid-template-columns: 1fr 1fr; }
+.contact-wide { grid-column: 1 / -1; }
 .tour, .tip-card { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 22px; }
 .tour { display: flex; flex-direction: column; align-items: flex-start; align-self: start; }
 .tour h3, .tip-card h3 { margin: 0 0 4px; }
@@ -208,11 +247,29 @@ body.dark .sand { fill: #5a4030; }
 .contact-card { background: #26201a; border-radius: 16px; padding: 22px; }
 .contact-card h3 { margin-top: 0; }
 .phone { font-size: 26px; font-weight: 700; text-decoration: none; }
-.emergency, .links { list-style: none; padding: 0; margin: 0; }
+.emergency { list-style: none; padding: 0; margin: 0; }
+
+/* Полезные сайты с QR-кодами */
+.links { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 12px; }
+.qr-link {
+  display: flex; flex-direction: column; align-items: center; gap: 6px;
+  padding: 16px; border-radius: 12px;
+  background: #1b1612; color: #f1e6d6;
+  text-align: center; text-decoration: none;
+  transition: transform 0.2s;
+}
+.qr-link:hover { transform: translateY(-3px); }
+.qr-link img { width: 140px; height: 140px; background: #fff; border-radius: 8px; padding: 6px; }
+.qr-link b { color: var(--gold); }
+.qr-link span { font-size: 14px; color: #b3a28d; }
+
+/* Кнопка музыки: золотая, когда музыка играет */
+#musicBtn.playing { background: var(--gold); border-color: var(--gold); color: #fff; }
 .emergency li, .links li { margin-bottom: 10px; }
 .emergency a { display: inline-block; min-width: 44px; font-size: 20px; font-weight: 700; text-decoration: none; }
 
 .footer { background: #110e0b; color: #b3a28d; padding: 20px 0; font-size: 14px; }
+.footer .container { display: flex; flex-wrap: wrap; gap: 4px 12px; }
 
 /* ---------- Кнопка «Наверх» ---------- */
 .to-top {
@@ -243,6 +300,13 @@ body.dark .sand { fill: #5a4030; }
 .modal-buttons { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
 
 /* ---------- Телефоны и планшеты ---------- */
+/* На небольших экранах пирамида стоит под текстом, а не справа */
+@media (max-width: 1100px) {
+  .hero { flex-direction: column; justify-content: center; }
+  .hero-content { padding-bottom: 0; }
+  .pyramid-scene { position: relative; right: auto; top: auto; transform: none; margin: 10px auto 70px; }
+}
+
 @media (max-width: 900px) {
   .burger { display: block; }
   .nav {
@@ -257,6 +321,7 @@ body.dark .sand { fill: #5a4030; }
 }
 
 @media (max-width: 600px) {
+  .links { grid-template-columns: 1fr; }
   h2 { font-size: 28px; }
   .logo { font-size: 20px; }
   .lang button { padding: 8px 7px; }

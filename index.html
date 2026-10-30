@@ -31,6 +31,7 @@
           <button data-lang="ru">РУС</button>
           <button data-lang="en">ENG</button>
         </div>
+        <button class="icon-btn" id="musicBtn" data-i18n-title="music.on" title="Включить музыку">♪</button>
         <button class="icon-btn" id="themeBtn" title="Тема">🌙</button>
         <button class="icon-btn burger" id="burger">☰</button>
       </div>
@@ -39,10 +40,7 @@
 
   <!-- Главный экран -->
   <section class="hero" id="home">
-    <svg class="hero-pyramids" viewBox="0 0 1440 400" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
-      <polygon class="p1" points="520,320 720,60 920,320"/>
-      <polygon class="p1-shade" points="720,60 920,320 770,320"/>
-      <polygon class="p2" points="880,320 1010,150 1140,320"/>
+    <svg class="hero-sand" viewBox="0 0 1440 400" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
       <path class="sand" d="M0,310 C300,270 520,340 820,300 C1080,270 1260,330 1440,300 L1440,400 L0,400 Z"/>
     </svg>
     <div class="container hero-content">
@@ -51,6 +49,18 @@
       <p class="hero-text" data-i18n="hero.text">Пирамиды, храмы на Ниле и Красное море.</p>
       <a href="#places" class="btn btn-gold" data-i18n="hero.btn1">Смотреть места</a>
       <a href="#route" class="btn btn-light" data-i18n="hero.btn2">Мой маршрут</a>
+    </div>
+
+    <!-- 3D-пирамида: 4 треугольные грани и основание, повёрнутые в пространстве (CSS 3D) -->
+    <div class="pyramid-scene" id="pyramidScene">
+      <div class="pyramid" id="pyramid">
+        <div class="face face-front"></div>
+        <div class="face face-right"></div>
+        <div class="face face-back"></div>
+        <div class="face face-left"></div>
+        <div class="base"></div>
+      </div>
+      <p class="pyramid-hint" data-i18n="pyramid.hint">Покрутите пирамиду мышкой или пальцем</p>
     </div>
   </section>
 
@@ -148,22 +158,41 @@
           </ul>
         </div>
 
-        <div class="contact-card">
+        <div class="contact-card contact-wide">
           <h3 data-i18n="contacts.links">Полезные сайты</h3>
-          <ul class="links">
-            <li><a href="https://www.egypt.travel" target="_blank">egypt.travel</a> — <span data-i18n="links.egypt">Официальный туристический сайт</span></li>
-            <li><a href="https://www.visa2egypt.gov.eg" target="_blank">visa2egypt.gov.eg</a> — <span data-i18n="links.visa">Электронная виза</span></li>
-            <li><a href="https://egymonuments.gov.eg" target="_blank">egymonuments.gov.eg</a> — <span data-i18n="links.monuments">Музеи и памятники</span></li>
-            <li><a href="https://www.booking.com/country/eg.html" target="_blank">booking.com</a> — <span data-i18n="links.booking">Бронирование отелей</span></li>
-          </ul>
+          <p class="note" data-i18n="links.qr">Наведите камеру телефона на QR-код, чтобы открыть сайт.</p>
+          <!-- QR-коды лежат в папке qr/ (сделаны заранее, интернет для них не нужен) -->
+          <div class="links">
+            <a class="qr-link" href="https://www.egypt.travel" target="_blank">
+              <img src="qr/egypt-travel.svg" alt="QR egypt.travel">
+              <b>egypt.travel</b>
+              <span data-i18n="links.egypt">Официальный туристический сайт</span>
+            </a>
+            <a class="qr-link" href="https://www.visa2egypt.gov.eg" target="_blank">
+              <img src="qr/visa2egypt.svg" alt="QR visa2egypt.gov.eg">
+              <b>visa2egypt.gov.eg</b>
+              <span data-i18n="links.visa">Электронная виза</span>
+            </a>
+            <a class="qr-link" href="https://www.booking.com/country/eg.html" target="_blank">
+              <img src="qr/booking.svg" alt="QR booking.com">
+              <b>booking.com</b>
+              <span data-i18n="links.booking">Бронирование отелей</span>
+            </a>
+          </div>
         </div>
       </div>
     </div>
   </section>
 
   <footer class="footer">
-    <div class="container" data-i18n="footer">EgyptWay — учебный проект.</div>
+    <div class="container">
+      <span data-i18n="footer">EgyptWay — учебный проект.</span>
+      <span data-i18n="footer.music">Музыка: «Гипноз Нила», Zvukogram.com.</span>
+    </div>
   </footer>
+
+  <!-- Фоновая музыка: загружается только после нажатия на кнопку ♪ -->
+  <audio id="music" src="audio/music.mp3" loop preload="none"></audio>
 
   <!-- Кнопка «Наверх» -->
   <a href="#home" class="to-top" id="toTop" data-i18n-title="top" title="Наверх">↑</a>

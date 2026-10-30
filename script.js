@@ -66,6 +66,70 @@ themeBtn.addEventListener("click", () => {
   setTheme(document.body.classList.contains("dark") ? "light" : "dark");
 });
 
+// ---------- Музыка ----------
+const music = document.getElementById("music");
+const musicBtn = document.getElementById("musicBtn");
+music.volume = 0.2; // тихо, на фоне
+
+function updateMusicButton() {
+  const playing = !music.paused;
+  musicBtn.classList.toggle("playing", playing);
+  musicBtn.title = playing ? t("music.off") : t("music.on");
+}
+
+musicBtn.addEventListener("click", () => {
+  if (music.paused) {
+    music.play();
+  } else {
+    music.pause();
+  }
+});
+music.addEventListener("play", updateMusicButton);
+music.addEventListener("pause", updateMusicButton);
+
+// ---------- 3D-пирамида: сама медленно крутится, а мышкой или пальцем её можно повернуть ----------
+const pyramid = document.getElementById("pyramid");
+const scene = document.getElementById("pyramidScene");
+let angleY = 30;      // поворот вокруг вертикальной оси
+let angleX = -15;     // наклон: смотрим на пирамиду немного сверху
+let dragging = false;
+let lastX = 0;
+let lastY = 0;
+
+function drawPyramid() {
+  pyramid.style.transform = `rotateX(${angleX}deg) rotateY(${angleY}deg)`;
+}
+
+function spin() {
+  if (!dragging) angleY += 0.2;
+  drawPyramid();
+  requestAnimationFrame(spin);
+}
+
+scene.addEventListener("pointerdown", (e) => {
+  dragging = true;
+  lastX = e.clientX;
+  lastY = e.clientY;
+  scene.setPointerCapture(e.pointerId);
+});
+scene.addEventListener("pointermove", (e) => {
+  if (!dragging) return;
+  angleY += (e.clientX - lastX) * 0.5;
+  angleX = Math.max(-40, Math.min(-5, angleX - (e.clientY - lastY) * 0.3)); // смотрим только сверху
+  lastX = e.clientX;
+  lastY = e.clientY;
+});
+scene.addEventListener("pointerup", () => { dragging = false; });
+scene.addEventListener("pointercancel", () => { dragging = false; });
+
+// Если в системе включено «уменьшить движение», пирамида сама не крутится
+if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+  drawPyramid();
+  scene.addEventListener("pointermove", drawPyramid);
+} else {
+  spin();
+}
+
 // ---------- Меню на телефоне ----------
 const nav = document.getElementById("nav");
 document.getElementById("burger").addEventListener("click", () => nav.classList.toggle("open"));
@@ -313,6 +377,7 @@ function showTours() {
 // ---------- Запуск ----------
 function showAll() {
   translatePage();
+  updateMusicButton();
   showFilters();
   showCards();
   showRoute();

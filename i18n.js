@@ -50,10 +50,14 @@ const TEXTS = {
     "contacts.ambulance": "Скорая помощь", "contacts.fire": "Пожарная служба",
     "contacts.links": "Полезные сайты",
     "links.egypt": "Официальный туристический сайт Египта", "links.visa": "Электронная виза",
-    "links.monuments": "Музеи и памятники, билеты", "links.booking": "Бронирование отелей",
+    "links.booking": "Бронирование отелей",
 
     "footer": "EgyptWay — учебный проект. Фото: Wikimedia Commons.",
-    "top": "Наверх"
+    "top": "Наверх",
+    "music.on": "Включить музыку", "music.off": "Выключить музыку",
+    "footer.music": "Музыка: «Гипноз Нила», Zvukogram.com.",
+    "pyramid.hint": "Покрутите пирамиду мышкой или пальцем",
+    "links.qr": "Наведите камеру телефона на QR-код, чтобы открыть сайт."
   },
 
   kk: {
@@ -104,10 +108,14 @@ const TEXTS = {
     "contacts.ambulance": "Жедел жәрдем", "contacts.fire": "Өрт сөндіру қызметі",
     "contacts.links": "Пайдалы сайттар",
     "links.egypt": "Египеттің ресми туристік сайты", "links.visa": "Электронды виза",
-    "links.monuments": "Мұражайлар мен ескерткіштер, билеттер", "links.booking": "Қонақүй брондау",
+    "links.booking": "Қонақүй брондау",
 
     "footer": "EgyptWay — оқу жобасы. Фото: Wikimedia Commons.",
-    "top": "Жоғары"
+    "top": "Жоғары",
+    "music.on": "Музыканы қосу", "music.off": "Музыканы өшіру",
+    "footer.music": "Музыка: «Гипноз Нила», Zvukogram.com.",
+    "pyramid.hint": "Пирамиданы тінтуірмен немесе саусақпен айналдырыңыз",
+    "links.qr": "Сайтты ашу үшін телефон камерасын QR-кодқа бағыттаңыз."
   },
 
   en: {
@@ -158,9 +166,13 @@ const TEXTS = {
     "contacts.ambulance": "Ambulance", "contacts.fire": "Fire service",
     "contacts.links": "Useful websites",
     "links.egypt": "Egypt's official tourism website", "links.visa": "E-visa",
-    "links.monuments": "Museums and monuments, tickets", "links.booking": "Hotel booking",
+    "links.booking": "Hotel booking",
 
     "footer": "EgyptWay — a student project. Photos: Wikimedia Commons.",
-    "top": "Top"
+    "top": "Top",
+    "music.on": "Play music", "music.off": "Stop music",
+    "footer.music": "Music: “Gipnoz Nila”, Zvukogram.com.",
+    "pyramid.hint": "Drag the pyramid with your mouse or finger",
+    "links.qr": "Point your phone camera at a QR code to open the website."
   }
 };
